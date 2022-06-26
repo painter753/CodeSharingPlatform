@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 public class CodeSnippet {
 
     private String code;
-    private LocalDateTime timestamp;
+    private String timestamp;
 
-    public CodeSnippet(String code) {
+    public CodeSnippet(String code, String timestamp) {
         this.code = code;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = timestamp;
     }
 
     public String getCode() {
@@ -20,11 +20,11 @@ public class CodeSnippet {
         this.code = code;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 }

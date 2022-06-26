@@ -1,13 +1,13 @@
 package platform.controller;
 
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import platform.model.CodeSnippet;
 import platform.repository.CodeRepository;
 
-@RestController
+@Controller
 public class WebController {
 
     private CodeRepository codeRepository;
@@ -16,60 +16,22 @@ public class WebController {
         this.codeRepository = codeRepository;
     }
 
-    @GetMapping(
-            path = "/code",
-            produces = MediaType.TEXT_HTML_VALUE
-    )
-    public ResponseEntity<String> getCode() {
-        return ResponseEntity.ok(getContent());
+    @GetMapping("/code/{id}")
+    public String getCodeByNumber(@PathVariable int id, Model model) {
+        CodeSnippet snippet = codeRepository.getSnippetByNumber(id);
+        model.addAttribute("snippet", snippet);
+        return "snippet";
     }
 
-    @GetMapping(
-            path = "/code/new",
-            produces = MediaType.TEXT_HTML_VALUE
-    )
-    public ResponseEntity<String> getCodeForm() {
-        return ResponseEntity.ok(getForm());
+    @GetMapping("/code/latest")
+    public String getCodeByNumber(Model model) {
+        model.addAttribute("snippets", codeRepository.getSnippetLatest());
+        return "snippets";
     }
 
-    private String getContent() {
-        CodeSnippet snippet = codeRepository.getSnippet();
-        return "<html> <head> <title>Code</title> </head> <body>" +
-                    "<pre id=\"code_snippet\"> " +
-                        snippet.getCode() +
-                    "</pre>" +
-                    "<span id=\"load_date\">" +
-                        snippet.getTimestamp().toString() +
-                    "</span> </body>" +
-                "</html>";
+    @GetMapping("/code/new")
+    public String getCodeForm() {
+        return "new_snippet";
     }
-
-    private String getForm() {
-        return "<html> <head> <title>Create</title> </head> <body>" +
-                "<textarea id=\"code_snippet\"></textarea>" +
-                "<button id=\"send_snippet\" type=\"submit\" onclick=\"send()\">Submit</button>" +
-                "<script>" +
-                "function send() {\n" +
-                "    let object = {\n" +
-                "        \"code\": document.getElementById(\"code_snippet\").value\n" +
-                "    };\n" +
-                "    \n" +
-                "    let json = JSON.stringify(object);\n" +
-                "    \n" +
-                "    let xhr = new XMLHttpRequest();\n" +
-                "    xhr.open(\"POST\", '/api/code/new', false)\n" +
-                "    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');\n" +
-                "    xhr.send(json);\n" +
-                "    \n" +
-                "    if (xhr.status == 200) {\n" +
-                "      alert(\"Success!\");\n" +
-                "    }\n" +
-                "}" +
-                "</script>" +
-                "</body>" +
-                "</html>";
-    }
-
-
 
 }

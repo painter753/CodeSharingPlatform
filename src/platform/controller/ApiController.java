@@ -1,17 +1,23 @@
 package platform.controller;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import platform.model.CodeSnippet;
 import platform.repository.CodeRepository;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@RestController
+@Controller
 @RequestMapping("/api")
 public class ApiController {
+
+    private static final String DATE_FORMATTER= "yyyy-MM-dd HH:mm:ss";
 
     private CodeRepository codeRepository;
 
@@ -19,27 +25,40 @@ public class ApiController {
         this.codeRepository = codeRepository;
     }
 
-    @GetMapping("/code")
-    public ResponseEntity<Map<String, String>> getCode() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, "application/json");
-        CodeSnippet snippet = codeRepository.getSnippet();
-        if (snippet != null) {
-            return ResponseEntity.ok().headers(httpHeaders).body(
-                    Map.of(
-                            "code", snippet.getCode(),
-                            "date", snippet.getTimestamp().toString()
-                    )
-            );
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @GetMapping("/code/{n}")
+    public ResponseEntity<Object> getSnippetByNumber(@PathVariable int n) {
+        CodeSnippet snippet = codeRepository.getSnippetByNumber(n);
+        return ResponseEntity.ok().body(
+                Map.of(
+                        "code", snippet.getCode(),
+                        "date", snippet.getTimestamp()
+                )
+        );
+    }
+
+    @GetMapping("/code/latest")
+    public ResponseEntity<Object> getCode() {
+        List<Map<String, ? extends Serializable>> snippets =
+                codeRepository.getSnippetLatest()
+                        .stream()
+                        .map(s ->
+                                Map.of(
+                                "code", s.getCode(),
+                                "date", s.getTimestamp()
+                                )
+                        ).collect(Collectors.toList());
+        return ResponseEntity.ok().body(snippets);
     }
 
     @PostMapping("/code/new")
-    public ResponseEntity<Map<String, String>> postCode(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Object> postCode(@RequestBody Map<String, String> request) {
         String code = request.get("code");
-        codeRepository.addNewSnippet(new CodeSnippet(code));
-        return ResponseEntity.ok(Map.of());
+        int id = codeRepository.addNewSnippet(new CodeSnippet(code, getTimestamp()));
+        return ResponseEntity.ok(Map.of("id", id + ""));
+    }
+
+    private String getTimestamp() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATE_FORMATTER));
     }
 
 }
