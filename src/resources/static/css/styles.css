@@ -1,22 +1,22 @@
-pre {
-    width: 100%;
-    border: cadetblue solid medium;
-    border-radius: 7px;
-    background-color: gainsboro;
-    padding: 10px;
-    margin: 10px;
-}
+/*pre {*/
+/*    width: 100%;*/
+/*    border: cadetblue solid medium;*/
+/*    border-radius: 7px;*/
+/*    background-color: gainsboro;*/
+/*    padding: 10px;*/
+/*    margin: 10px;*/
+/*}*/
 
 body {
     background-color: aliceblue;
 }
 
-span {
-    border: coral solid thin;
-    border-radius: 7px;
-    padding: 6px;
-    margin: 10px;
-}
+/*span {*/
+/*    border: coral solid thin;*/
+/*    border-radius: 7px;*/
+/*    padding: 6px;*/
+/*    margin: 10px;*/
+/*}*/
 
 div {
     padding:5px;

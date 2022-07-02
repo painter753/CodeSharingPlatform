@@ -5,14 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import platform.model.CodeSnippet;
-import platform.repository.CodeRepository;
+import platform.service.CodeSnippetsService;
 
 @Controller
 public class WebController {
 
-    private CodeRepository codeRepository;
+    private CodeSnippetsService codeRepository;
 
-    public WebController(CodeRepository codeRepository) {
+    public WebController(CodeSnippetsService codeRepository) {
         this.codeRepository = codeRepository;
     }
 

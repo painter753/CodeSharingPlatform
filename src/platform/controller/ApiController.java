@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import platform.model.CodeSnippet;
 import platform.repository.CodeRepository;
+import platform.service.CodeSnippetsService;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,9 +20,9 @@ public class ApiController {
 
     private static final String DATE_FORMATTER= "yyyy-MM-dd HH:mm:ss";
 
-    private CodeRepository codeRepository;
+    private CodeSnippetsService codeRepository;
 
-    public ApiController(CodeRepository codeRepository) {
+    public ApiController(CodeSnippetsService codeRepository) {
         this.codeRepository = codeRepository;
     }
 

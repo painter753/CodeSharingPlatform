@@ -1,5 +1,7 @@
 package platform.repository;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import platform.model.CodeSnippet;
 
@@ -8,16 +10,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class CodeRepository {
+@Repository
+public interface CodeRepository extends CrudRepository<CodeSnippet, Integer> {
 
-    private List<CodeSnippet> codeSnippets;
+    static final List<CodeSnippet> codeSnippets = new ArrayList<>();
 
-    public CodeRepository() {
-        this.codeSnippets = new ArrayList<>();
-    }
-
-    public List<CodeSnippet> getSnippetLatest() {
+    default List<CodeSnippet> getSnippetLatest() {
         List<CodeSnippet> snippets = new ArrayList<>(codeSnippets);
         Collections.reverse(snippets);
         return snippets.stream()
@@ -25,14 +23,13 @@ public class CodeRepository {
                 .collect(Collectors.toList());
     }
 
-    public CodeSnippet getSnippetByNumber(int n) {
+    default CodeSnippet getSnippetByNumber(int n) {
         return codeSnippets.get(n - 1);
     }
 
-    public int addNewSnippet(CodeSnippet snippet) {
+    default int addNewSnippet(CodeSnippet snippet) {
         codeSnippets.add(snippet);
         return codeSnippets.size();
     }
-
 
 }
