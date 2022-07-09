@@ -13,7 +13,7 @@
     <#if snippets?has_content>
         <#list snippets as snippet>
             <div>
-                <span>${snippet.timestamp}</span>
+                <span>${snippet.timestampCreated}</span>
                 <pre><code>${snippet.code}</code></pre>
             </div>
         </#list>
